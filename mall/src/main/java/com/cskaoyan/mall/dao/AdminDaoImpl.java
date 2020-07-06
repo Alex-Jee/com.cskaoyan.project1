@@ -12,7 +12,10 @@ import org.apache.commons.dbutils.handlers.BeanHandler;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AdminDaoImpl implements AdminDao {
     @Override
@@ -42,5 +45,38 @@ public class AdminDaoImpl implements AdminDao {
             e.printStackTrace();
         }
         return admins;
+    }
+
+    @Override
+    public List<Admin> getSerachAdmins(Admin admin) {
+        QueryRunner runner=new QueryRunner(DruidUtils.getDataSource());
+        List<Admin> admins=null;
+        Map<String,Object> result=getDynamicSQL(admin);
+        try{
+            admins=runner.query((String) result.get("sql"),
+                    new BeanListHandler<>(Admin.class),
+                    ((List<String>)result.get("params")).toArray());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return admins;
+    }
+
+    private Map<String, Object> getDynamicSQL(Admin admin) {
+        Map<String,Object> map=new HashMap<>();
+        String sql="Select * from admin where 1=1";
+        List<String> params=new ArrayList<>();
+        if(!"".equals(admin.getEmail())){
+            sql+=" and email like ?";
+            params.add("%"+admin.getEmail()+"%");
+        }
+        if(!"".equals(admin.getNickname())){
+            sql+=" and nickname like ?";
+            params.add("%"+admin.getNickname()+"%");
+        }
+        sql+=" order by id asc;";
+        map.put("sql",sql);
+        map.put("params",params);
+        return map;
     }
 }

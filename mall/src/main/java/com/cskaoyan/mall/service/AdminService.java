@@ -14,4 +14,5 @@ public interface AdminService {
 
     List<Admin> allAdmins();
 
+    List<Admin> getSearchAdmins(Admin admin);
 }

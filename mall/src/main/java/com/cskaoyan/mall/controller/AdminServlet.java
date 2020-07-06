@@ -37,6 +37,8 @@ public class AdminServlet extends HttpServlet {
         String action = requestURI.replace("/api/admin/admin/", "");
         if("login".equals(action)){
             login(request, response);
+        }else if("getSearchAdmins".equals(action)){
+            getSearchAdmins(request,response);
         }
     }
 
@@ -67,6 +69,21 @@ public class AdminServlet extends HttpServlet {
             result.setCode(10000);
             result.setMessage("服务器异常");
         }
+        response.getWriter().println(gson.toJson(result));
+    }
+
+    /**
+     * 简单版多条件查询实现：admin管理员账户信息
+     * @param request
+     * @param response
+     */
+    private void getSearchAdmins(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody = HttpUtils.getRequestBody(request);
+        Admin admin=gson.fromJson(requestBody,Admin.class);
+        List<Admin> admins=adminService.getSearchAdmins(admin);
+        Result result = new Result();
+        result.setCode(0);
+        result.setData(admins);
         response.getWriter().println(gson.toJson(result));
     }
 
