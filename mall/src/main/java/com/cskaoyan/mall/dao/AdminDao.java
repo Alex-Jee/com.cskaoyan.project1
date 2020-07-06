@@ -17,4 +17,10 @@ public interface AdminDao {
     List<Admin> getSerachAdmins(Admin admin);
 
     int addAdminss(Admin admin);
+
+    void deleteAdmins(int id);
+
+    Admin getAdminsInfoById(int id);
+
+    int updateAdminss(Admin admin);
 }

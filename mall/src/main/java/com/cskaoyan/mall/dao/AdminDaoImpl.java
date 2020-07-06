@@ -18,11 +18,12 @@ import java.util.List;
 import java.util.Map;
 
 public class AdminDaoImpl implements AdminDao {
+    private QueryRunner queryRunner=new QueryRunner(DruidUtils.getDataSource());
+
     @Override
     public int login(Admin admin) {
-        QueryRunner runner = new QueryRunner(DruidUtils.getDataSource());
         try {
-            Admin ad = runner.query("select * from admin where email = ? and pwd = ?",
+            Admin ad = queryRunner.query("select * from admin where email = ? and pwd = ?",
                     new BeanHandler<>(Admin.class),
                     admin.getEmail(),
                     admin.getPwd());
@@ -37,10 +38,9 @@ public class AdminDaoImpl implements AdminDao {
 
     @Override
     public List<Admin> allAdmins() {
-        QueryRunner runner = new QueryRunner(DruidUtils.getDataSource());
         List<Admin> admins = null;
         try {
-            admins = runner.query("select * from admin", new BeanListHandler<Admin>(Admin.class));
+            admins = queryRunner.query("select * from admin", new BeanListHandler<Admin>(Admin.class));
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -49,11 +49,10 @@ public class AdminDaoImpl implements AdminDao {
 
     @Override
     public List<Admin> getSerachAdmins(Admin admin) {
-        QueryRunner runner=new QueryRunner(DruidUtils.getDataSource());
         List<Admin> admins=null;
         Map<String,Object> result=getDynamicSQL(admin);
         try{
-            admins=runner.query((String) result.get("sql"),
+            admins=queryRunner.query((String) result.get("sql"),
                     new BeanListHandler<>(Admin.class),
                     ((List<String>)result.get("params")).toArray());
         }catch (Exception e){
@@ -64,25 +63,56 @@ public class AdminDaoImpl implements AdminDao {
 
     @Override
     public int addAdminss(Admin admin) {
-        QueryRunner queryRunner=new QueryRunner(DruidUtils.getDataSource());
+        Admin result=isEmailExists(admin);
+        if(result!=null) return 403;
         try {
-            Admin result=queryRunner.query("select * from admin where email=? limit 1",
-                    new BeanHandler<>(Admin.class),
-                    admin.getEmail());
-            if(result!=null) return 403;
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        try {
-            int result=queryRunner.update("insert into admin(email,nickname,pwd) values(?,?,?)",
+            int code=queryRunner.update("insert into admin(email,nickname,pwd) values(?,?,?)",
                     admin.getEmail(),admin.getNickname(),admin.getPwd());
-            if(result>0) return 200;
+            if(code>0) return 200;
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return 500;
     }
 
+    @Override
+    public void deleteAdmins(int id) {
+        try {
+            queryRunner.update("delete from admin where id=?",id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public Admin getAdminsInfoById(int id) {
+        Admin result= null;
+        try {
+            result = queryRunner.query("select * from admin where id=?", new BeanHandler<>(Admin.class), id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public int updateAdminss(Admin admin) {
+        int code=500;
+        try {
+            int result=queryRunner.update("update admin set email=?,nickname=?,pwd=? where id=?",
+                    admin.getEmail(),admin.getNickname(),admin.getPwd(),admin.getId());
+            if(result>0) code=200;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return code;
+    }
+
+    /**
+     * 获取动态SQL查询结果
+     * @param admin
+     * @return
+     */
     private Map<String, Object> getDynamicSQL(Admin admin) {
         Map<String,Object> map=new HashMap<>();
         String sql="Select * from admin where 1=1";
@@ -99,5 +129,21 @@ public class AdminDaoImpl implements AdminDao {
         map.put("sql",sql);
         map.put("params",params);
         return map;
+    }
+
+    /**
+     * 判断给定admin账户是否存在，存在返回这个admin对象，不存在返回null
+     * @param admin
+     * @return
+     */
+    private Admin isEmailExists(Admin admin){
+        try {
+            return queryRunner.query("select * from admin where email=? limit 1",
+                    new BeanHandler<>(Admin.class),
+                    admin.getEmail());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

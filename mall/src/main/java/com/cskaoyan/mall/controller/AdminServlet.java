@@ -41,7 +41,24 @@ public class AdminServlet extends HttpServlet {
             getSearchAdmins(request,response);
         }else if("addAdminss".equals(action)){
             addAdminss(request,response);
+        }else if("updateAdminss".equals(action)){
+            updateAdminss(request,response);
         }
+    }
+
+    private void updateAdminss(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody=HttpUtils.getRequestBody(request);
+        Admin admin=gson.fromJson(requestBody,Admin.class);
+        int code=adminService.updateAdminss(admin);
+        Result result = new Result();
+        if(code==200){
+            result.setCode(200);
+            result.setMessage("修改成功！");
+        }else if(code==500){
+            result.setCode(500);
+            result.setMessage("服务器异常！");
+        }
+        response.getWriter().print(gson.toJson(result));
     }
 
     private void addAdminss(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -51,13 +68,13 @@ public class AdminServlet extends HttpServlet {
         Result result = new Result();
         if(code==200){
             result.setCode(200);
-            result.setMessage("创建管理员成功！");
-        }else if(code==500){
-            result.setCode(500);
-            result.setMessage("服务器异常！");
+            result.setMessage("创建管理员成功,返回查看所有账户");
         }else if(code==403){
             result.setCode(403);
             result.setMessage("用户已存在，创建失败!");
+        }else if(code==500){
+            result.setCode(500);
+            result.setMessage("服务器异常！");
         }
         response.getWriter().print(gson.toJson(result));
     }
@@ -93,7 +110,7 @@ public class AdminServlet extends HttpServlet {
     }
 
     /**
-     * 简单版多条件查询实现：admin管理员账户信息
+     * 简单版多条件查询实现：搜索符合条件的全部admin管理员账户信息
      * @param request
      * @param response
      */
@@ -112,7 +129,33 @@ public class AdminServlet extends HttpServlet {
         String action = requestURI.replace("/api/admin/admin/", "");
         if("allAdmins".equals(action)){
             allAdmins(request, response);
+        }else if("deleteAdmins".equals(action.substring(0,12))){
+            int id=new Integer(request.getParameter("id"));
+            deleteAdmins(id,response);
+        }else if("getAdminsInfo".equals(action.substring(0,13))){
+            int id=new Integer(request.getParameter("id"));
+            getAdminsInfoById(id,response);
         }
+    }
+
+    private void getAdminsInfoById(int id, HttpServletResponse response) throws IOException {
+        Admin admin=adminService.getAdminsInfoById(id);
+        Result result=new Result();
+        result.setCode(0);
+        result.setData(admin);
+        response.getWriter().print(gson.toJson(result));
+    }
+
+    /**
+     * 清除指定id的账户
+     * @param id
+     */
+    private void deleteAdmins(int id,HttpServletResponse response) throws IOException {
+        adminService.deleteAdmins(id);
+        Result result=new Result();
+        result.setCode(200);
+        result.setMessage("删除成功，请刷新页面");
+        response.getWriter().print(gson.toJson(result));
     }
 
     /**
