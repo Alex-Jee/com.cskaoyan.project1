@@ -39,7 +39,27 @@ public class AdminServlet extends HttpServlet {
             login(request, response);
         }else if("getSearchAdmins".equals(action)){
             getSearchAdmins(request,response);
+        }else if("addAdminss".equals(action)){
+            addAdminss(request,response);
         }
+    }
+
+    private void addAdminss(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody=HttpUtils.getRequestBody(request);
+        Admin admin=gson.fromJson(requestBody,Admin.class);
+        int code=adminService.addAdminss(admin);
+        Result result = new Result();
+        if(code==200){
+            result.setCode(200);
+            result.setMessage("创建管理员成功！");
+        }else if(code==500){
+            result.setCode(500);
+            result.setMessage("服务器异常！");
+        }else if(code==403){
+            result.setCode(403);
+            result.setMessage("用户已存在，创建失败!");
+        }
+        response.getWriter().print(gson.toJson(result));
     }
 
     /**

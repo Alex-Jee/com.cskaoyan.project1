@@ -62,6 +62,27 @@ public class AdminDaoImpl implements AdminDao {
         return admins;
     }
 
+    @Override
+    public int addAdminss(Admin admin) {
+        QueryRunner queryRunner=new QueryRunner(DruidUtils.getDataSource());
+        try {
+            Admin result=queryRunner.query("select * from admin where email=? limit 1",
+                    new BeanHandler<>(Admin.class),
+                    admin.getEmail());
+            if(result!=null) return 403;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        try {
+            int result=queryRunner.update("insert into admin(email,nickname,pwd) values(?,?,?)",
+                    admin.getEmail(),admin.getNickname(),admin.getPwd());
+            if(result>0) return 200;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 500;
+    }
+
     private Map<String, Object> getDynamicSQL(Admin admin) {
         Map<String,Object> map=new HashMap<>();
         String sql="Select * from admin where 1=1";

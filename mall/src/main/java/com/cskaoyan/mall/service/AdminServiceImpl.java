@@ -31,4 +31,9 @@ public class AdminServiceImpl implements AdminService {
     public List<Admin> getSearchAdmins(Admin admin) {
         return adminDao.getSerachAdmins(admin);
     }
+
+    @Override
+    public int addAdminss(Admin admin) {
+        return adminDao.addAdminss(admin);
+    }
 }
