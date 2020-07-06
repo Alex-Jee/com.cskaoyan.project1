@@ -32,7 +32,6 @@ public class AdminServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String requestURI = request.getRequestURI();
-        System.out.println(requestURI);
         // login allAdmins...
         String action = requestURI.replace("/api/admin/admin/", "");
         if("login".equals(action)){
