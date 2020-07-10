@@ -1,13 +1,13 @@
 package com.cskaoyan.mall.model;
 
 public class User {
-    int id;
-    String email;
-    String nickname;
-    String pwd;
-    String recipient;
-    String address;
-    String phone;
+    private int id;
+    private String email;
+    private String nickname;
+    private String pwd;
+    private String recipient;
+    private String address;
+    private String phone;
 
     @Override
     public String toString() {

@@ -4,6 +4,9 @@ import com.cskaoyan.mall.bo.GoodsInfoBO;
 
 import java.util.List;
 
+/**
+ * 专用于商品管理中的编辑商品
+ */
 public class GoodsInfo {
     private List<Spec> specs;
     private GoodsInfoBO goods;
