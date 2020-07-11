@@ -5,6 +5,7 @@ import com.cskaoyan.mall.dao.GoodsDao;
 import com.cskaoyan.mall.dao.GoodsDaoImpl;
 import com.cskaoyan.mall.model.Goods;
 import com.cskaoyan.mall.model.GoodsInfo;
+import com.cskaoyan.mall.model.Msg;
 import com.cskaoyan.mall.model.Type;
 
 import javax.servlet.ServletContext;
@@ -41,5 +42,20 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public void deleteGoods(int id, ServletContext context) {
         goodsDao.deleteGoods(id,context);
+    }
+
+    @Override
+    public List<Msg> noReplyMsg() {
+        return goodsDao.noReplyMsg();
+    }
+
+    @Override
+    public List<Msg> repliedMsg() {
+        return goodsDao.repliedMsg();
+    }
+
+    @Override
+    public void reply(Msg msg) {
+        goodsDao.reply(msg);
     }
 }

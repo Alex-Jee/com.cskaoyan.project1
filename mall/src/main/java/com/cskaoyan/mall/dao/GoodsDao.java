@@ -3,6 +3,7 @@ package com.cskaoyan.mall.dao;
 import com.cskaoyan.mall.bo.GoodsBO;
 import com.cskaoyan.mall.model.Goods;
 import com.cskaoyan.mall.model.GoodsInfo;
+import com.cskaoyan.mall.model.Msg;
 import com.cskaoyan.mall.model.Type;
 
 import javax.servlet.ServletContext;
@@ -20,4 +21,10 @@ public interface GoodsDao {
     GoodsInfo getGoodsInfo(int id);
 
     void deleteGoods(int id, ServletContext context);
+
+    List<Msg> noReplyMsg();
+
+    List<Msg> repliedMsg();
+
+    void reply(Msg msg);
 }

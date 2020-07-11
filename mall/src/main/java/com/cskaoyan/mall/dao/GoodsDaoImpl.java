@@ -1,12 +1,7 @@
 package com.cskaoyan.mall.dao;
 
-import com.cskaoyan.mall.bo.GoodsBO;
-import com.cskaoyan.mall.bo.GoodsInfoBO;
-import com.cskaoyan.mall.bo.SpecBO;
-import com.cskaoyan.mall.model.Goods;
-import com.cskaoyan.mall.model.GoodsInfo;
-import com.cskaoyan.mall.model.Spec;
-import com.cskaoyan.mall.model.Type;
+import com.cskaoyan.mall.bo.*;
+import com.cskaoyan.mall.model.*;
 import com.cskaoyan.mall.utils.DruidUtils;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
@@ -121,6 +116,60 @@ public class GoodsDaoImpl implements GoodsDao {
         try {
             queryRunner.update("delete from goods where id=?",id);
             queryRunner.update("delete from spec where goodsId=?",id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Msg> noReplyMsg() {
+        List<Msg> result=null;
+        try {
+            result=queryRunner.query("select * from msg where state=1 order by id",
+                    new BeanListHandler<>(Msg.class));
+            for (Msg msg : result) {
+                MsgGoodsBO goods=queryRunner.query("select name from goods where id=?",
+                        new BeanHandler<>(MsgGoodsBO.class),
+                        msg.getGoodsId());
+                msg.setGoods(goods);
+                MsgUserBO user=queryRunner.query("select nickname as name from user where id=?",
+                        new BeanHandler<>(MsgUserBO.class),
+                        msg.getUserId());
+                msg.setUser(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public List<Msg> repliedMsg() {
+        List<Msg> result=null;
+        try {
+            result=queryRunner.query("select * from msg where state=0 order by id",
+                    new BeanListHandler<>(Msg.class));
+            for (Msg msg : result) {
+                MsgGoodsBO goods=queryRunner.query("select name from goods where id=?",
+                        new BeanHandler<>(MsgGoodsBO.class),
+                        msg.getGoodsId());
+                msg.setGoods(goods);
+                MsgUserBO user=queryRunner.query("select nickname as name from user where id=?",
+                        new BeanHandler<>(MsgUserBO.class),
+                        msg.getUserId());
+                msg.setUser(user);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    @Override
+    public void reply(Msg msg) {
+        try {
+            queryRunner.update("update msg set state=0,replyContent=? where id=?",
+                    msg.getContent(),msg.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }

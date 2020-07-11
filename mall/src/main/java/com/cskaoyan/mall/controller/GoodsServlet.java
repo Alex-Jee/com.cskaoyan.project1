@@ -1,10 +1,7 @@
 package com.cskaoyan.mall.controller;
 
 import com.cskaoyan.mall.bo.GoodsBO;
-import com.cskaoyan.mall.model.Goods;
-import com.cskaoyan.mall.model.GoodsInfo;
-import com.cskaoyan.mall.model.Result;
-import com.cskaoyan.mall.model.Type;
+import com.cskaoyan.mall.model.*;
 import com.cskaoyan.mall.service.GoodsService;
 import com.cskaoyan.mall.service.GoodsServiceImpl;
 import com.cskaoyan.mall.utils.FileUploadUtils;
@@ -36,7 +33,18 @@ public class GoodsServlet extends HttpServlet {
             imgUpload(request,response);
         }else if("addGoods".equals(action)){
             addGoods(request,response);
+        }else if("reply".equals(action)){
+            reply(request,response);
         }
+    }
+
+    private void reply(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        String requestBody=HttpUtils.getRequestBody(request);
+        Msg msg=gson.fromJson(requestBody,Msg.class);
+        goodsService.reply(msg);
+        Result result = new Result();
+        result.setCode(0);
+        response.getWriter().print(gson.toJson(result));
     }
 
     private void addGoods(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -84,7 +92,21 @@ public class GoodsServlet extends HttpServlet {
             getGoodsInfo(request,response);
         }else if("deleteGoods".equals(action)){
             deleteGoods(request,response);
+        }else if("noReplyMsg".equals(action)){
+            noReplyMsg(request,response);
+        }else if("repliedMsg".equals(action)){
+            repliedMsg(request,response);
         }
+    }
+
+    private void repliedMsg(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<Msg> list=goodsService.repliedMsg();
+        response.getWriter().print(gson.toJson(new Result(list)));
+    }
+
+    private void noReplyMsg(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        List<Msg> list=goodsService.noReplyMsg();
+        response.getWriter().print(gson.toJson(new Result(list)));
     }
 
     private void deleteGoods(HttpServletRequest request, HttpServletResponse response) throws IOException {
