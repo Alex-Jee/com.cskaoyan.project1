@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.controller;
+package com.cskaoyan.mall.controller.admin;
 
 import com.cskaoyan.mall.model.Admin;
 import com.cskaoyan.mall.model.Result;
@@ -95,6 +95,7 @@ public class AdminServlet extends HttpServlet {
         Result result = new Result();
         if(code == 200){
             //返回正确的结果
+            request.getSession().setAttribute("admin",admin);
             result.setCode(0);
             HashMap<Object, Object> map = new HashMap<>();
             map.put("token", admin.getEmail());

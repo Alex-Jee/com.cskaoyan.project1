@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.controller;
+package com.cskaoyan.mall.controller.admin;
 
 import com.cskaoyan.mall.bo.GoodsBO;
 import com.cskaoyan.mall.model.*;
