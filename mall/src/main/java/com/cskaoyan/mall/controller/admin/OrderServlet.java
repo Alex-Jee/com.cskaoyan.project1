@@ -3,7 +3,7 @@ package com.cskaoyan.mall.controller.admin;
 import com.cskaoyan.mall.bo.ChangeOrderBO;
 import com.cskaoyan.mall.bo.OrderBO;
 import com.cskaoyan.mall.bo.PageOrderBO;
-import com.cskaoyan.mall.com.cskaoyan.mall.vo.PageOrderVO;
+import com.cskaoyan.mall.vo.PageOrderVO;
 import com.cskaoyan.mall.model.Result;
 import com.cskaoyan.mall.service.OrderService;
 import com.cskaoyan.mall.service.OrderServiceImpl;
@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
 
 import static com.cskaoyan.mall.utils.HttpUtils.getRequestBody;
 

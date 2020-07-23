@@ -125,6 +125,9 @@ public class AdminServlet extends HttpServlet {
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println(request.getContextPath());
+
+
         String requestURI = request.getRequestURI();
         String action = requestURI.replace("/api/admin/admin/", "");
         if("allAdmins".equals(action)){

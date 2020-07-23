@@ -3,7 +3,7 @@ package com.cskaoyan.mall.dao;
 import com.cskaoyan.mall.bo.ChangeOrderBO;
 import com.cskaoyan.mall.bo.OrderBO;
 import com.cskaoyan.mall.bo.PageOrderBO;
-import com.cskaoyan.mall.com.cskaoyan.mall.vo.PageOrderVO;
+import com.cskaoyan.mall.vo.PageOrderVO;
 
 public interface OrderDao {
 

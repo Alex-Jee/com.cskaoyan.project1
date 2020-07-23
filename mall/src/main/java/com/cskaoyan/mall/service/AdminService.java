@@ -23,4 +23,5 @@ public interface AdminService {
     Admin getAdminsInfoById(int id);
 
     int updateAdminss(Admin admin);
+
 }

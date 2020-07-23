@@ -41,4 +41,29 @@ public class DruidUtils {
     public static Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }
+
+    /**
+     * 开启事务
+     * @throws SQLException
+     */
+    public static void startTransaction() throws SQLException {
+        getConnection().setAutoCommit(false);
+    }
+
+    /**
+     * 提交事务
+     * @throws SQLException
+     */
+    public static void commitTransaction() throws SQLException {
+        getConnection().commit();
+    }
+
+    /**
+     * 回滚事务
+     * @throws SQLException
+     */
+    public static void rollbackTransaction() throws SQLException {
+        getConnection().rollback();
+    }
+
 }

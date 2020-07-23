@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.com.cskaoyan.mall.vo;
+package com.cskaoyan.mall.vo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.cskaoyan.mall.com.cskaoyan.mall.vo;
+package com.cskaoyan.mall.vo;
 
 public class PageOrderInfoVO {
     private Integer id;

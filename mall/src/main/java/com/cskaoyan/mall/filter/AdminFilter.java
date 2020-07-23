@@ -43,6 +43,7 @@ public class AdminFilter implements Filter {
                 if(admin==null){
                     Result result = new Result();
                     result.setData("拒绝访问：当前页面需要登录查看");
+                    result.setCode(401);
                     response.getWriter().print(gson.toJson(result));
                     return;
                 }
